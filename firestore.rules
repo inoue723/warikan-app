@@ -1,0 +1,14 @@
+// TODO: 使えるようにする
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read;
+      allow write: if request.auth.uid == userId;
+    }
+    match /users/{userId}/costs/{costId} {
+      // 自分とpartnerしかreadできないようにする
+      allow read: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.partnerId == userId
+      allow write: if request.auth.uid == userId;
+    }
+  }
+}
