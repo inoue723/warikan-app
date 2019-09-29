@@ -23,6 +23,7 @@ class App extends React.Component {
       inputCost: "",
       myCosts: [],
       partnerCosts: [],
+      difference: 0
     };
   }
 
@@ -45,6 +46,7 @@ class App extends React.Component {
   };
 
   async getCosts() {
+    console.log("getCosts called");
     if (!this.state.user) {
       console.error("this.state.user false");
       return;
@@ -78,15 +80,18 @@ class App extends React.Component {
       }
     });
 
+    const difference = _calcDiffrence(myCosts, partnerCosts);
+
     this.setState({
       myCosts,
-      partnerCosts
+      partnerCosts,
+      difference
     });
   }
 
   render() {
     console.log("App render start");
-    const { user, myCosts, partnerCosts } = this.state;
+    const { user, myCosts, partnerCosts, difference } = this.state;
     return (
       <div className="App">
         <Router>
@@ -98,6 +103,8 @@ class App extends React.Component {
                   user={user}
                   myCosts={myCosts}
                   partnerCosts={partnerCosts}
+                  difference={difference}
+                  onClick={() => this.getCosts()}
                 />
               ) : (
                 <Redirect to="/SignIn" />
@@ -110,6 +117,20 @@ class App extends React.Component {
       </div>
     );
   }
+}
+
+function _calcDiffrence(myCosts, partnerCosts) {
+  let myTotalCost = 0;
+  if (myCosts.length > 0) {
+    myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
+  }
+
+  let partnerTotalCost = 0;
+  if (partnerCosts.length > 0) {
+    partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
+  }
+
+  return myTotalCost - partnerTotalCost;
 }
 
 export default App;
