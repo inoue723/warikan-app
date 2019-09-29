@@ -38,13 +38,13 @@ class Home extends React.Component {
     }
     const userId = firebase.auth().currentUser.uid;
     db.collection("users").doc(userId).collection("costs").add({
-      amount: this.state.inputCost,
+      amount: Number(this.state.inputCost),
       createdAt: firebase.firestore.Timestamp.now(),
       category: this.state.inputCategory
     })
     .then((docRef) => {
       this.setState({ inputCost: "" });
-      this.props.getCosts();
+      this.props.onClick();
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
@@ -66,7 +66,7 @@ class Home extends React.Component {
 
   render(){
     console.log("Home render start");
-    const { user, myCosts, partnerCosts } = this.props;
+    const { user, myCosts, partnerCosts, difference } = this.props;
     return(
       <div>
         <h2>Home<button onClick={e => this.handleSignOut()}>Sign Out</button></h2>
@@ -87,6 +87,9 @@ class Home extends React.Component {
         <hr />
         <div className="myCost-list">
           <h3>自分</h3>
+          <div>
+            <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3>
+          </div>
           <table align="center">
             <tbody>
               <tr>
