@@ -8,4 +8,4 @@ cd warikan-app
 
 npm install
 
-npm run dev
+npm start
