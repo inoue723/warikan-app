@@ -1,7 +1,6 @@
 import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth'
-import { Redirect } from 'react-router-dom';
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -9,16 +8,16 @@ class SignIn extends React.Component {
     this.state = {
       email: "",
       password: "",
-      isLoggedIn: false
     };
   }
+
   handleSignIn(e) {
     e.preventDefault();
     const { email, password } = this.state;
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
         console.log("Login Success");
-        this.setState({ isLoggedIn: true });
+        window.location.href = "/";
       })
       .catch((error) => {
         var errorMessage = error.message;
@@ -27,9 +26,6 @@ class SignIn extends React.Component {
   }
 
   render(){
-    if (this.state.isLoggedIn) {
-      return <Redirect to="/" />
-    }
     return(
       <div>
         <h2>Sign in</h2>

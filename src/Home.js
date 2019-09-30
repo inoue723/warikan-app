@@ -1,7 +1,6 @@
 import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore'
-import moment from 'moment';
 
 const db = firebase.firestore();
 
@@ -9,15 +8,13 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: "",
-      partnerId: "",
-      email: "",
-      partnerEmail: "",
       inputCost: "",
       inputCategory: "",
-      myCosts: [],
-      partnerCosts: [],
     };
+  }
+
+  componentDidMount() {
+    console.log("Home didMount start");
   }
 
   handleSignOut() {
@@ -34,42 +31,6 @@ class Home extends React.Component {
       });
   }
 
-  async getCosts() {
-    const { userId } = this.props;
-    const myCostsData = await db.collection('users').doc(userId)
-      .collection("costs")
-      .orderBy('createdAt', 'desc')
-      .get();
-    const user = await db.collection('users').doc(userId).get();
-    const partnerId = user.data().partnerId;
-    const partnerCostsData = await db.collection('users').doc(partnerId)
-      .collection("costs")
-      .orderBy("createdAt", "desc")
-      .get();
-
-    const myCosts = myCostsData.docs.map(c => {
-      return {
-        id: c.id,
-        amount: c.data().amount,
-        createdAt: moment(c.data().createdAt.toDate()).format("YYYY-MM-DD"),
-        category: c.data().category
-      }
-    });
-    const partnerCosts = partnerCostsData.docs.map(c => {
-      return {
-        id: c.id,
-        amount: c.data().amount,
-        createdAt: moment(c.data().createdAt.toDate()).format("YYYY-MM-DD"),
-        category: c.data().category
-      }
-    });
-
-    this.setState({
-      myCosts,
-      partnerCosts
-    });
-  }
-
   saveCost() {
     if (!this.state.inputCost || this.state.inputCost <= 0) {
       console.error("INVALID_PARAM")
@@ -77,13 +38,13 @@ class Home extends React.Component {
     }
     const userId = firebase.auth().currentUser.uid;
     db.collection("users").doc(userId).collection("costs").add({
-      amount: this.state.inputCost,
+      amount: Number(this.state.inputCost),
       createdAt: firebase.firestore.Timestamp.now(),
       category: this.state.inputCategory
     })
     .then((docRef) => {
       this.setState({ inputCost: "" });
-      this.getCosts();
+      this.props.onClick();
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
@@ -96,7 +57,7 @@ class Home extends React.Component {
       .doc(id)
       .delete()
       .then(() => {
-        this.getCosts();
+        this.props.getCosts();
       })
       .catch((error) => {
         console.error("Error remove document: ", error);
@@ -104,13 +65,12 @@ class Home extends React.Component {
   }
 
   render(){
+    console.log("Home render start");
+    const { user, myCosts, partnerCosts, difference } = this.props;
     return(
       <div>
         <h2>Home<button onClick={e => this.handleSignOut()}>Sign Out</button></h2>
-        <p>Your Email: {this.props.email}</p>
-        <div>
-          <button onClick={e => this.getCosts() }>コスト表示</button>
-        </div>
+        <p>Your Email: {user && user.email}</p>
         <div>
           <div>
             <label htmlFor="amount">金額</label>
@@ -127,6 +87,9 @@ class Home extends React.Component {
         <hr />
         <div className="myCost-list">
           <h3>自分</h3>
+          <div>
+            <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3>
+          </div>
           <table align="center">
             <tbody>
               <tr>
@@ -135,7 +98,7 @@ class Home extends React.Component {
                 <th>カテゴリ</th>
               </tr>
               {
-                this.state.myCosts.map(cost => {
+                myCosts.map(cost => {
                   return (
                       <tr key={cost.id}>
                         <td>{cost.createdAt}</td>
@@ -159,7 +122,7 @@ class Home extends React.Component {
                 <th>カテゴリ</th>
               </tr>
               {
-                this.state.partnerCosts.map(cost => {
+                partnerCosts.map(cost => {
                   return (
                       <tr key={cost.id}>
                         <td>{cost.createdAt}</td>

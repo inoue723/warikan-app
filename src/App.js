@@ -3,32 +3,32 @@ import './App.css';
 import './firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-// import Routes from './Routes';
+import 'firebase/firestore';
 import { Route, BrowserRouter as Router , Switch, Redirect } from 'react-router-dom';
+import moment from 'moment';
+
 import Navbar from './Navbar';
 import SignIn from './SignIn';
-import SignUp from './SignUp';
+// import SignUp from './SignUp';
 import Home from './Home';
+
+const db = firebase.firestore();
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: "",
+      user: null,
       isLoggedIn: true,
-      partnerUserId: "",
-      email: "",
-      password: "",
-      userEmail: "",
-      partnerEmail: "",
       inputCost: "",
       myCosts: [],
       partnerCosts: [],
+      difference: 0
     };
   }
 
   componentDidMount() {
-    // console.log(firebase.auth().currentUser);
+    console.log("App didMount start");
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         console.log('is login');
@@ -36,39 +36,62 @@ class App extends React.Component {
           isLoggedIn: true,
           user
         });
-        // this.getCosts(user.id);
+        this.getCosts();
       } else {
         console.log('is not login');
         this.setState({ isLoggedIn: false });
       }
     });
+
   };
 
-  // handleSignUp(e) {
-  //   e.preventDefault()
+  async getCosts() {
+    console.log("getCosts called");
+    if (!this.state.user) {
+      console.error("this.state.user false");
+      return;
+    }
+    const userId = this.state.user.uid;
+    const myCostsData = await db.collection('users').doc(userId)
+      .collection("costs")
+      .orderBy('createdAt', 'desc')
+      .get();
+    const user = await db.collection('users').doc(userId).get();
+    const partnerId = user.data().partnerId;
+    const partnerCostsData = await db.collection('users').doc(partnerId)
+      .collection("costs")
+      .orderBy("createdAt", "desc")
+      .get();
 
-  //   const { email, password } = this.state;
-  //   firebase.auth().createUserWithEmailAndPassword(email, password)
-  //     .then((user) => {
-  //       console.log(user);
-  //       this.setState({ email: "", password: "" })
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       var errorMessage = error.message;
-  //       console.log(errorMessage);
-  //     });
-  // }
+    const myCosts = myCostsData.docs.map(c => {
+      return {
+        id: c.id,
+        amount: c.data().amount,
+        createdAt: moment(c.data().createdAt.toDate()).format("YYYY-MM-DD"),
+        category: c.data().category
+      }
+    });
+    const partnerCosts = partnerCostsData.docs.map(c => {
+      return {
+        id: c.id,
+        amount: c.data().amount,
+        createdAt: moment(c.data().createdAt.toDate()).format("YYYY-MM-DD"),
+        category: c.data().category
+      }
+    });
 
-  // invitePartner() {
-  //   db.collection("")
-  // }
+    const difference = _calcDiffrence(myCosts, partnerCosts);
 
-  // getPartner() {
-  //   db.collection('')
-  // }
+    this.setState({
+      myCosts,
+      partnerCosts,
+      difference
+    });
+  }
 
   render() {
+    console.log("App render start");
+    const { user, myCosts, partnerCosts, difference } = this.state;
     return (
       <div className="App">
         <Router>
@@ -77,64 +100,37 @@ class App extends React.Component {
             <Route exact path="/" render={() => (
               this.state.isLoggedIn ? (
                 <Home
-                  email={this.state.user.email}
-                  userId={this.state.user.uid}
+                  user={user}
+                  myCosts={myCosts}
+                  partnerCosts={partnerCosts}
+                  difference={difference}
+                  onClick={() => this.getCosts()}
                 />
               ) : (
                 <Redirect to="/SignIn" />
               )
             )} />
             <Route path='/SignIn' component={SignIn}/>
-            <Route path='/SignUp' component={SignUp}/>
+            {/* <Route path='/SignUp' component={SignUp}/> */}
           </Switch>
         </Router>
-        {/* <header className="App-header">
-          <div className="form">
-            <form className="register-form">
-              <input
-              type="text"
-              placeholder="email address"
-              onChange={e => this.setState({ email: e.target.value })}
-            />
-              <input
-              type="password"
-              placeholder="password"
-              onChange={e => this.setState({ password: e.target.value })}
-            />
-              <button onClick={e => this.handleSignUp(e) }>Sign Up</button>
-              <button onClick={e => this.handleSignIn(e) }>Sign In</button>
-              <button onClick={e => this.handleSignOut()}>Sign Out</button>
-            </form>
-          </div>
-          <div className="invitePartner">
-            <input className="invitePartnerEmail"></input>
-            <button onClick={e => this.invitePartner}>招待</button>
-          </div>
-          <div className="userInfo">
-            <p className="myEmail">私: {this.state.userEmail}</p>
-            <p className="partnerEmail">相手: {this.state.partnerEmail}</p>
-          </div>
-          <div className="record-form">
-            <p>金額を入力</p>
-            <input type="number" value={this.state.inputCost} onChange={e => this.setState({ inputCost: e.target.value })}></input>
-            <button onClick={e => this.saveCost() }>記録する</button>
-          </div>
-          <div className="record-list">
-            {
-              this.state.myCosts.map(cost => {
-                return (
-                  <li key={cost.id}>
-                    {cost.amount}
-                    <button onClick={e => this.deleteCost(cost.id) }></button>
-                  </li>
-                );
-              })
-            }
-          </div>
-        </header> */}
       </div>
     );
   }
+}
+
+function _calcDiffrence(myCosts, partnerCosts) {
+  let myTotalCost = 0;
+  if (myCosts.length > 0) {
+    myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
+  }
+
+  let partnerTotalCost = 0;
+  if (partnerCosts.length > 0) {
+    partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
+  }
+
+  return myTotalCost - partnerTotalCost;
 }
 
 export default App;
