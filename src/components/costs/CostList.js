@@ -3,6 +3,8 @@ import SaveCost from './SaveCost';
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
+import { Redirect } from "react-router-dom"
+import moment from "moment"
 
 class CostList extends Component {
 
@@ -39,40 +41,38 @@ class CostList extends Component {
 //       });
 //   }
 
-  render(){
-    console.log("Home render start");
+  render() {
+    const { auth, costs } = this.props;
+    if (!auth.uid) return <Redirect to="/signin" />
+
     return(
       <div>
         <SaveCost />
-        <h1>costList</h1>
-        {/* <div className="myCost-list">
-          <h3>自分</h3>
-          <div>
-            <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3>
-          </div>
-          <table align="center">
-            <tbody>
-              <tr>
-                <th>日時</th>
-                <th>費用</th>
-                <th>カテゴリ</th>
-              </tr>
-              {
-                myCosts.map(cost => {
-                  return (
-                      <tr key={cost.id}>
-                        <td>{cost.createdAt}</td>
-                        <td>{cost.amount} 円</td>
-                        <td>{cost.category}</td>
-                      </tr>
-                  );
-                })
-              }
-            </tbody>
-          </table>
+        <h3>自分</h3>
+        <div>
+          {/* <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3> */}
         </div>
+        <table align="center">
+          <tbody>
+            <tr>
+              <th>日時</th>
+              <th>費用</th>
+              <th>カテゴリ</th>
+            </tr>
+            { costs && costs.map(cost => {
+                return (
+                    <tr key={cost.id}>
+                      <td>{moment(cost.createdAt.toDate()).format("YYYY-MM-DD")}</td>
+                      <td>{cost.amount} 円</td>
+                      <td>{cost.category}</td>
+                    </tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
         <hr />
-        <div className="partnerCost-list">
+        {/* <div className="partnerCost-list">
           <h3>相手</h3>
           <table align="center">
             <tbody>
@@ -101,9 +101,9 @@ class CostList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
-    projects: state.firestore.ordered.projects
+    costs: state.firestore.ordered.costs,
+    auth: state.firebase.auth
   }
 }
 
