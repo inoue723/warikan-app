@@ -1,5 +1,3 @@
-import { statement } from "@babel/template";
-
 const initState = {
   authError: null
 }

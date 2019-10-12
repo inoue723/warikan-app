@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, BrowserRouter as Router , Switch, Redirect } from 'react-router-dom'
+import { Route, BrowserRouter as Router , Switch } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import SignIn from "./components/auth/SignIn"
 import SignUp from "./components/auth/SignUp"
@@ -92,18 +92,18 @@ class App extends React.Component {
   }
 }
 
-function _calcDiffrence(myCosts, partnerCosts) {
-  let myTotalCost = 0;
-  if (myCosts.length > 0) {
-    myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
-  }
+// function _calcDiffrence(myCosts, partnerCosts) {
+//   let myTotalCost = 0;
+//   if (myCosts.length > 0) {
+//     myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
+//   }
 
-  let partnerTotalCost = 0;
-  if (partnerCosts.length > 0) {
-    partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
-  }
+//   let partnerTotalCost = 0;
+//   if (partnerCosts.length > 0) {
+//     partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
+//   }
 
-  return myTotalCost - partnerTotalCost;
-}
+//   return myTotalCost - partnerTotalCost;
+// }
 
 export default App;

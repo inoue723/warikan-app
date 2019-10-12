@@ -42,8 +42,12 @@ class CostList extends Component {
 //   }
 
   render() {
+    console.log("CostList render start");
     const { auth, costs } = this.props;
-    if (!auth.uid) return <Redirect to="/signin" />
+    if (auth.isLoaded && !auth.uid) {
+      console.log("not auth");
+      return <Redirect to="/signin" />
+    }
 
     return(
       <div>
@@ -106,6 +110,10 @@ const mapStateToProps = (state) => {
     auth: state.firebase.auth
   }
 }
+
+// export default connect(
+//   ({ firebase: { auth } }) => ({ authExists: !!auth && !!auth.uid })
+// )(CostList)
 
 export default compose(
   connect(mapStateToProps),
