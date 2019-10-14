@@ -1,6 +1,10 @@
-let firebaseConfig;
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+
+let config;
 if (process.env.NODE_ENV === 'development') {
-   firebaseConfig = {
+   config = {
     apiKey: "AIzaSyCVTCzgxR2mBrnNvnHekRTN1qKMe8Ui428",
     authDomain: "firestore-local-test.firebaseapp.com",
     databaseURL: "https://firestore-local-test.firebaseio.com",
@@ -10,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
     appId: "1:154221457694:web:a987f2f8b9dd7fc278990f"
   };
 } else if (process.env.NODE_ENV === 'production') {
-  firebaseConfig = {
+  config = {
     apiKey: "AIzaSyBpO0wG_I2qA5kAkyMlzGCzvSbzpI_m8ko",
     authDomain: "gender-equality-4bdf6.firebaseapp.com",
     databaseURL: "https://gender-equality-4bdf6.firebaseio.com",
@@ -21,4 +25,7 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-export default firebaseConfig
+firebase.initializeApp(config);
+firebase.firestore();
+
+export default firebase;
