@@ -17,7 +17,6 @@ const FlashMessage = (props) => {
   const color = MESSAGE_COLOR_BY_TYPE[messageType];
   const toastHtml = `<span class="${color.textColor}-text">${message}</span>`
   M.toast({ html: toastHtml, classes: color.backgroundColor });
-  // flashMessageを削除する処理
 
   return <div></div>
 }

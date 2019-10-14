@@ -4,9 +4,6 @@ import { saveCost } from '../../redux/actions/costActions'
 import _ from "lodash"
 import { emitMessage } from "../../redux/actions/flashMessageActions"
 
-// CDNで記述しているmaterializeCssの読み込み
-// const { M } = window;
-
 class SaveCost extends Component {
   state = {
     amount: "",
