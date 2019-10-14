@@ -36,7 +36,24 @@ class CostList extends Component {
     }
 
     if (!isLoaded(this.props.myCosts) || !isLoaded(this.props.partnerCosts)) {
-      return <h2 className="center-align">is loading...</h2>
+      return (
+        <div className="row">
+          <div><br /><br /><br /></div>
+          <div className="col s12 center">
+            <div className="preloader-wrapper big active ">
+              <div className="spinner-layer spinner-blue-only">
+                <div className="circle-clipper left">
+                  <div className="circle"></div>
+                </div><div className="gap-patch">
+                  <div className="circle"></div>
+                </div><div className="circle-clipper right">
+                  <div className="circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     }
 
     const difference = this.calcDiffrence(myCosts, partnerCosts);

@@ -1,16 +1,34 @@
-const initState = {}
+const initState = {
+  isSuccess: null,
+  isTrying: null,
+  error: null
+}
 
-const projectReducer = (state = initState, action) => {
+const costReducer = (state = initState, action) => {
   switch (action.type) {
+    case "SAVE_COST_TRY":
+      console.log("save cost try");
+      return {
+        isTrying: true
+      }
     case 'SAVE_COST_SUCCESS':
       console.log('save cost success');
-      return state;
+      return {
+        ...state,
+        isSuccess: true,
+        isTrying: false
+      };
     case 'SAVE_COST_ERROR':
       console.log('save cost error');
-      return state;
+      return {
+        ...state,
+        error: action.err,
+        isSuccess: false,
+        isTrying: false
+      };
     default:
       return state;
   }
 };
 
-export default projectReducer;
+export default costReducer;
