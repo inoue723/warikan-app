@@ -24,7 +24,7 @@ class SaveCost extends Component {
           <input type="text" id="category" value={this.state.category} onChange={e => this.setState({ category: e.target.value })} />
         </div>
         <div>
-          <button onClick={e => this.handleSubmit(e)}>記録</button>
+          <button className="waves-effect red lighten-2 btn" onClick={e => this.handleSubmit(e)}>記録</button>
         </div>
       </div>
     )

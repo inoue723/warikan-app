@@ -3,12 +3,11 @@ import { connect } from "react-redux"
 import { signOut } from "../../redux/actions/authActions"
 
 const SignedInLinks = (props) => {
-  const { profile } = props;
+  // const { profile } = props;
   return (
     <div>
       <ul className="right">
-        <li>{profile.name}</li>
-        <li><button onClick={props.signOut}>Log Out</button></li>
+        <li><button className="grey darken-2 btn" onClick={props.signOut}>Log Out</button></li>
       </ul>
     </div>
   )
