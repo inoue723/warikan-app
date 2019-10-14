@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { saveCost } from '../../redux/actions/costActions'
 import _ from "lodash"
-import { emitMessage } from "../../redux/actions/flashMessageActions"
+import { emitFlashMessage } from "../../redux/actions/flashMessageActions"
 
 class SaveCost extends Component {
   state = {
     amount: "",
     category: "",
-    error: null
   };
 
   handleSubmit(e) {
@@ -17,7 +16,7 @@ class SaveCost extends Component {
     amount = Number(amount);
 
     if (!_.isInteger(amount) || amount <= 0) {
-      this.props.emitMessage("数値を正しく入力してください", "warning");
+      this.props.emitFlashMessage("数値を正しく入力してください", "warning");
       return;
     }
   
@@ -57,7 +56,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     saveCost: (cost) => dispatch(saveCost(cost)),
-    emitMessage: (message, messageType) => dispatch(emitMessage(message, messageType))
+    emitFlashMessage: (message, messageType) => dispatch(emitFlashMessage(message, messageType))
   }
 }
 
