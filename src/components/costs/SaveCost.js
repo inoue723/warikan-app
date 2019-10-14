@@ -4,12 +4,12 @@ import { saveCost } from '../../redux/actions/costActions'
 
 class SaveCost extends Component {
   state = {
-    inputCost: "",
-    inputCategory: "",
+    amount: "",
+    category: "",
   };
 
   handleSubmit(e) {
-      this.props.saveCost(this.state);
+    this.props.saveCost(this.state);
   }
 
   render() {
@@ -17,11 +17,11 @@ class SaveCost extends Component {
       <div>
         <div>
           <label htmlFor="amount">金額</label>
-          <input type="number" id="amount" value={this.state.inputCost} onChange={e => this.setState({ inputCost: e.target.value })} />
+          <input type="number" id="amount" value={this.state.amount} onChange={e => this.setState({ amount: Number(e.target.value) })} />
         </div>
         <div>
           <label htmlFor="category">カテゴリ</label>
-          <input type="text" id="category" value={this.state.inputCategory} onChange={e => this.setState({ inputCategory: e.target.value })} />
+          <input type="text" id="category" value={this.state.category} onChange={e => this.setState({ category: e.target.value })} />
         </div>
         <div>
           <button onClick={e => this.handleSubmit(e)}>記録</button>

@@ -7,28 +7,6 @@ import { Redirect } from "react-router-dom"
 import moment from "moment"
 
 class CostList extends Component {
-
-//   saveCost() {
-//     if (!this.state.inputCost || this.state.inputCost <= 0) {
-//       console.error("INVALID_PARAM")
-//       return;
-//     }
-//     const userId = firebase.auth().currentUser.uid;
-//     db.collection("users").doc(userId).collection("costs").add({
-//       amount: Number(this.state.inputCost),
-//       createdAt: firebase.firestore.Timestamp.now(),
-//       category: this.state.inputCategory
-//     })
-//     .then((docRef) => {
-//       this.setState({ inputCost: "" });
-//       this.props.onClick();
-//     })
-//     .catch((error) => {
-//       console.error("Error adding document: ", error);
-//     });
-//   }
-
-
 //   deleteCost(id) {
 //     db.collection("costs")
 //       .doc(id)
@@ -42,7 +20,6 @@ class CostList extends Component {
 //   }
 
   render() {
-    console.log("CostList render start");
     const { auth, costs } = this.props;
     if (auth.isLoaded && !auth.uid) {
       console.log("not auth");
@@ -75,7 +52,6 @@ class CostList extends Component {
             }
           </tbody>
         </table>
-        <hr />
         {/* <div className="partnerCost-list">
           <h3>相手</h3>
           <table align="center">
@@ -111,13 +87,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-// export default connect(
-//   ({ firebase: { auth } }) => ({ authExists: !!auth && !!auth.uid })
-// )(CostList)
-
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([
-    { collection: 'costs' }
+  firestoreConnect((props) => [
+    {
+      collection: `users/${props.auth.uid}/costs`,
+      storeAs: 'costs'
+    }
   ])
 )(CostList)
