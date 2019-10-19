@@ -21,6 +21,7 @@ class SaveCost extends Component {
     }
   
     this.props.saveCost({ amount, category });
+    this.setState({ amount: "", category: "" });
   }
 
   render() {
