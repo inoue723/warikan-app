@@ -3,15 +3,17 @@ import { connect } from 'react-redux'
 import { saveCost } from '../../redux/actions/costActions'
 import _ from "lodash"
 import { emitFlashMessage } from "../../redux/actions/flashMessageActions"
+import moment from "moment"
 
 class SaveCost extends Component {
   state = {
+    date: "",
     amount: "",
     category: "",
   };
 
   handleSubmit(e) {
-    let { amount, category } = this.state;
+    let { date, amount, category } = this.state;
 
     amount = Number(amount);
 
@@ -19,19 +21,33 @@ class SaveCost extends Component {
       this.props.emitFlashMessage("数値を正しく入力してください", "warning");
       return;
     }
+
+    date = new Date(this.state.date);    
   
-    this.props.saveCost({ amount, category });
-    this.setState({ amount: "", category: "" });
+    this.props.saveCost({ date, amount, category });
+    this.setState({ date: moment().format("YYYY-MM-DD"), amount: "", category: "" });
   }
 
   render() {
     const { amount, category, error } = this.state;
+    
+    let date;
+    if (this.state.date.length > 0 ) {
+      date = this.state.date;
+    } else {
+      date = moment().format("YYYY-MM-DD");
+    }
+
     const { cost } = this.props;
 
     return (
       <div>
         { cost && cost.isTrying && <div className="progress"><div className="indeterminate"></div></div> }
         { error && <div className="card-panel lime lighten-2"><span className="white-text">{ error }</span></div> }
+        <div>
+          <label htmlFor="date">日付</label>
+          <input type="date" id="date" value={date} onChange={e => this.setState({ date: e.target.value })} />
+        </div>
         <div>
           <label htmlFor="amount">金額</label>
           <input type="number" id="amount" value={amount} onChange={e => this.setState({ amount: e.target.value })} />

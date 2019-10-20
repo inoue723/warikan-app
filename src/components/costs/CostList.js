@@ -78,7 +78,7 @@ class CostList extends Component {
               return (
                 <tr key={cost.id}>
                   <td>{moment(cost.createdAt.toDate()).format("YYYY-MM-DD")}</td>
-                  <td>{cost.amount} 円</td>
+                  <td>{moment(cost.date.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.category}</td>
                   <td className="right-align">{cost.amount.toLocaleString()} 円</td>
                 </tr>
