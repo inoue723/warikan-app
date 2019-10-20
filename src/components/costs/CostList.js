@@ -63,15 +63,16 @@ class CostList extends Component {
       <div className="container">
         <SaveCost />
         <div>
-          <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3>
+          <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference).toLocaleString()}円</h3>
         </div>
         <table align="center">
           <tbody>
             <tr>
               {/* TODO: 支払日は今のところcreatedAtを見てるので、カラムを作って、記録するときに入力できるようにする */}
+              <th>入力日</th>
               <th>支払日</th>
-              <th>費用</th>
               <th>カテゴリ</th>
+              <th>費用</th>
             </tr>
             { costs && costs.map(cost => {
               return (
@@ -79,6 +80,7 @@ class CostList extends Component {
                   <td>{moment(cost.createdAt.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.amount} 円</td>
                   <td>{cost.category}</td>
+                  <td className="right-align">{cost.amount.toLocaleString()} 円</td>
                 </tr>
               );
             })}
