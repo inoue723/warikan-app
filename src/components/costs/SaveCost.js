@@ -22,7 +22,7 @@ class SaveCost extends Component {
       return;
     }
 
-    paymentDate = new Date(this.state.paymentDate);
+    paymentDate = moment(this.state.paymentDate).toDate();
 
     this.props.saveCost({ paymentDate, amount, category });
     this.setState({ paymentDate: moment().format("YYYY-MM-DD"), amount: "", category: "" });
