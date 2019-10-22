@@ -69,7 +69,6 @@ class CostList extends Component {
           <tbody>
             <tr>
               {/* TODO: 支払日は今のところcreatedAtを見てるので、カラムを作って、記録するときに入力できるようにする */}
-              <th>入力日</th>
               <th>支払日</th>
               <th>カテゴリ</th>
               <th>費用</th>
@@ -77,7 +76,6 @@ class CostList extends Component {
             { costs && costs.map(cost => {
               return (
                 <tr key={cost.id}>
-                  <td>{moment(cost.createdAt.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.date && moment(cost.date.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.category}</td>
                   <td className="right-align">{cost.amount.toLocaleString()} 円</td>
