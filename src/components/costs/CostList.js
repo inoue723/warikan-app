@@ -23,7 +23,7 @@ class CostList extends Component {
 
   concatCosts(myCosts, partnerCosts) {
     const costs = myCosts.concat(partnerCosts);
-    costs.sort((a, b) => b.payment_date.toDate() - a.payment_date.toDate());
+    costs.sort((a, b) => b.paymentDate.toDate() - a.paymentDate.toDate());
     return costs;
   }
 
@@ -76,7 +76,7 @@ class CostList extends Component {
             { costs && costs.map(cost => {
               return (
                 <tr key={cost.id}>
-                  <td>{cost.payment_date && moment(cost.payment_date.toDate()).format("YYYY-MM-DD")}</td>
+                  <td>{cost.paymentDate && moment(cost.paymentDate.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.category}</td>
                   <td className="right-align">{cost.amount.toLocaleString()} 円</td>
                 </tr>

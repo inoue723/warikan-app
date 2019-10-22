@@ -7,13 +7,13 @@ import moment from "moment"
 
 class SaveCost extends Component {
   state = {
-    payment_date: moment().format("YYYY-MM-DD"),
+    paymentDate: moment().format("YYYY-MM-DD"),
     amount: "",
     category: "",
   };
 
   handleSubmit(e) {
-    let { payment_date, amount, category } = this.state;
+    let { paymentDate, amount, category } = this.state;
 
     amount = Number(amount);
 
@@ -22,14 +22,14 @@ class SaveCost extends Component {
       return;
     }
 
-    payment_date = new Date(this.state.payment_date);    
-  
-    this.props.saveCost({ payment_date, amount, category });
-    this.setState({ payment_date: moment().format("YYYY-MM-DD"), amount: "", category: "" });
+    paymentDate = new Date(this.state.paymentDate);
+
+    this.props.saveCost({ paymentDate, amount, category });
+    this.setState({ paymentDate: moment().format("YYYY-MM-DD"), amount: "", category: "" });
   }
-  
+
   render() {
-    const { payment_date, amount, category, error } = this.state;
+    const { paymentDate, amount, category, error } = this.state;
 
     const { cost } = this.props;
 
@@ -39,8 +39,8 @@ class SaveCost extends Component {
         { cost && cost.isTrying && <div className="progress"><div className="indeterminate"></div></div> }
         { error && <div className="card-panel lime lighten-2"><span className="white-text">{ error }</span></div> }
         <div>
-          <label htmlFor="payment_date">日付</label>
-          <input type="date" id="payment_date" value={payment_date} onChange={e => this.setState({ payment_date: e.target.value })} />
+          <label htmlFor="paymentDate">日付</label>
+          <input type="date" id="paymentDate" value={paymentDate} onChange={e => this.setState({ paymentDate: e.target.value })} />
         </div>
         <div>
           <label htmlFor="amount">金額</label>
