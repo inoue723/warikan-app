@@ -40,3 +40,25 @@ footer {
 .footer-item div {
   color: #efd7d7;
 }
+
+.save-cost-panel .category-box label {
+  display: block;
+}
+
+.save-cost-panel .category-box input {
+  display: inline-block;
+  max-width: calc(100% - 80px);
+}
+
+.save-cost-panel .category-box button {
+  margin-left: 5px;
+  width: 75px;
+}
+
+.save-cost-panel .category-group {
+  margin: 10px 0;
+}
+
+.save-cost-panel .category-group button {
+  margin-right: 5px;
+}

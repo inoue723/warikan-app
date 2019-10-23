@@ -4,15 +4,27 @@ import { saveCost } from '../../redux/actions/costActions'
 import _ from "lodash"
 import { emitFlashMessage } from "../../redux/actions/flashMessageActions"
 import moment from "moment"
+import { compose } from 'redux'
+import Categories from "./Categories";
 
 class SaveCost extends Component {
   state = {
     paymentDate: moment().format("YYYY-MM-DD"),
     amount: "",
     category: "",
+    showCategories: false
   };
 
+  handleSelectCategory(e) {
+    this.setState({
+      category: e.target.innerText,
+      showCategories: false
+    })
+  }
+
   handleSubmit(e) {
+    e.preventDefault();
+
     let { paymentDate, amount, category } = this.state;
 
     amount = Number(amount);
@@ -29,30 +41,34 @@ class SaveCost extends Component {
   }
 
   render() {
-    const { paymentDate, amount, category, error } = this.state;
-
+    const { paymentDate, amount, category, showCategories, error } = this.state;
     const { cost } = this.props;
 
-
     return (
-      <div className="container">
+      <div className="container save-cost-panel">
         { cost && cost.isTrying && <div className="progress"><div className="indeterminate"></div></div> }
         { error && <div className="card-panel lime lighten-2"><span className="white-text">{ error }</span></div> }
-        <div>
-          <label htmlFor="paymentDate">日付</label>
-          <input type="date" id="paymentDate" value={paymentDate} onChange={e => this.setState({ paymentDate: e.target.value })} />
-        </div>
-        <div>
-          <label htmlFor="amount">金額</label>
-          <input type="number" id="amount" value={amount} onChange={e => this.setState({ amount: e.target.value })} />
-        </div>
-        <div>
-          <label htmlFor="category">カテゴリ</label>
-          <input type="text" id="category" value={category} onChange={e => this.setState({ category: e.target.value })} />
-        </div>
-        <div>
-          <button className="waves-effect red lighten-2 btn" onClick={e => this.handleSubmit(e)}>記録</button>
-        </div>
+        <form>
+          <div>
+            <label htmlFor="paymentDate">日付</label>
+            <input type="date" id="paymentDate" value={paymentDate} onChange={e => this.submit({ paymentDate: e.target.paymentDate })} />
+          </div>
+          <div>
+            <label htmlFor="amount">金額</label>
+            <input type="number" id="amount" value={amount} onChange={e => this.setState({ amount: e.target.value })} />
+          </div>
+          <div className="category-box">
+            <label htmlFor="category">カテゴリ</label>
+            <input type="text" id="category" value={category} onChange={e => this.setState({ category: e.target.value })}/>
+            <button type="button" className="blue-grey lighten-2 btn" onClick={e => this.setState({ showCategories: !showCategories })}>
+              { showCategories ? "非表示" : "選択" }
+            </button>
+          </div>
+          <Categories showCategories={showCategories} handleSelectCategory={e => this.handleSelectCategory(e)}/>
+          <div>
+            <button type="submit" className="waves-effect red lighten-2 btn" onClick={e => this.handleSubmit(e)}>記録</button>
+          </div>
+        </form>
       </div>
     )
   }
@@ -60,7 +76,8 @@ class SaveCost extends Component {
 
 const mapStateToProps = state => {
   return {
-    cost: state.cost
+    cost: state.cost,
+    auth: state.firebase.auth,
   }
 }
 
@@ -71,4 +88,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SaveCost)
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+)(SaveCost)

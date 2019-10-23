@@ -31,7 +31,6 @@ let render = () => {
       <ReactReduxFirebaseProvider
         firebase={firebase}
         config={rrfConfig}
-        initializeAuth={true}
         dispatch={store.dispatch}
         createFirestoreInstance={createFirestoreInstance}>
         <App />

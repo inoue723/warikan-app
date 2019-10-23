@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "gender-equality-4bdf6"
+    "default": "gender-equality-4bdf6",
+    "development": "firestore-local-test"
   }
 }

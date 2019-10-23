@@ -25,21 +25,17 @@ export const signOut = () => {
 
 export const signUp = (newUser) => {
   return (dispatch, getState, {getFirebase, getFirestore}) => {
-    console.log("authActions signUp called");
     const firebase = getFirebase();
     const firestore = getFirestore();
-    console.log("*****firestore Obj*****", firestore);
 
     firebase.auth().createUserWithEmailAndPassword(
       newUser.email,
       newUser.password
     ).then((response) => {
-      console.log("authActions signUp firestore called");
       return firestore.collection("users").doc(response.user.uid).set({
         name: newUser.name,
       })
     }).then(() => {
-      console.log("dispatch called");
       dispatch({ type: "SIGNUP_SUCCESS" })
     }).catch((err) => {
       dispatch({ type: "SIGNUP_FAIL" , err })
