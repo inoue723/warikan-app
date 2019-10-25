@@ -23,7 +23,7 @@ class CostList extends Component {
 
   concatCosts(myCosts, partnerCosts) {
     const costs = myCosts.concat(partnerCosts);
-    costs.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
+    costs.sort((a, b) => b.paymentDate.toDate() - a.paymentDate.toDate());
     return costs;
   }
 
@@ -63,22 +63,21 @@ class CostList extends Component {
       <div className="container">
         <SaveCost />
         <div>
-          <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference)}円</h3>
+          <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference).toLocaleString()}円</h3>
         </div>
         <table align="center">
           <tbody>
             <tr>
-              {/* TODO: 支払日は今のところcreatedAtを見てるので、カラムを作って、記録するときに入力できるようにする */}
               <th>支払日</th>
-              <th>費用</th>
               <th>カテゴリ</th>
+              <th>費用</th>
             </tr>
             { costs && costs.map(cost => {
               return (
                 <tr key={cost.id}>
-                  <td>{moment(cost.createdAt.toDate()).format("YYYY-MM-DD")}</td>
-                  <td>{cost.amount} 円</td>
+                  <td>{moment(cost.paymentDate.toDate()).format("YYYY-MM-DD")}</td>
                   <td>{cost.category}</td>
+                  <td className="right-align">{cost.amount.toLocaleString()} 円</td>
                 </tr>
               );
             })}
