@@ -2,8 +2,6 @@ const admin = require("./init");
 
 const db = admin.firestore();
 
-console.log(db);
-
 (async () => {
   try {
     const usersSnapshot = await db.collection("users").get();
