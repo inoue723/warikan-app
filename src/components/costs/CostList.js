@@ -64,6 +64,8 @@ class CostList extends Component {
 
     return(
       <div className="container">
+        <h2>Wrikan</h2>
+        <div clsss="card-panel teal lighten-2"><a href="/LendingAndBorrowing" clsss="pink-text text-accent-4">Lending And Borrowing</a></div>
         <SaveCost />
         <div className="row">
           <div className={`col s6 card-panel center-align ${differenceColorClass}`}>
