@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom"
 import moment from "moment"
 
 class CostList extends Component {
-  calcDiffrence(myCosts, partnerCosts) {
+  getCostData(myCosts, partnerCosts) {
     let myTotalCost = 0;
     if (myCosts.length > 0) {
       myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
@@ -18,7 +18,9 @@ class CostList extends Component {
       partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
     }
 
-    return myTotalCost - partnerTotalCost;
+    const totalCost = myTotalCost + partnerTotalCost;
+    const difference =  Math.trunc(myTotalCost - (totalCost / 2));
+    return { totalCost, myTotalCost, partnerTotalCost, difference };
   }
 
   concatCosts(myCosts, partnerCosts) {
@@ -56,7 +58,8 @@ class CostList extends Component {
       )
     }
 
-    const difference = this.calcDiffrence(myCosts, partnerCosts);
+    const { difference } = this.getCostData(myCosts, partnerCosts);
+    const differenceColorClass = difference > 0 ? "green lighten-3" : "deep-orange lighten-2";
     const costs = this.concatCosts(myCosts, partnerCosts);
 
     return(
@@ -64,8 +67,12 @@ class CostList extends Component {
         <h2>Wrikan</h2>
         <div clsss="card-panel teal lighten-2"><a href="/LendingAndBorrowing" clsss="pink-text text-accent-4">Lending And Borrowing</a></div>
         <SaveCost />
-        <div>
-          <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference).toLocaleString()}円</h3>
+        <div className="row">
+          <div className={`col s6 card-panel center-align ${differenceColorClass}`}>
+            <h4 className="grey-text text-darken-3">
+              パートナーとの差額　{difference > 0 ? "+" : ""}{difference.toLocaleString()}円
+            </h4>
+          </div>
         </div>
         <table align="center">
           <tbody>
@@ -104,11 +111,13 @@ export default compose(
     return [
       {
         collection: `users/${props.auth.uid}/costs`,
-        storeAs: 'myCosts'
+        storeAs: 'myCosts',
+        orderBy: ['createdAt', 'desc']
       },
       {
         collection: `users/${props.profile.partnerId}/costs`,
-        storeAs: 'partnerCosts'
+        storeAs: 'partnerCosts',
+        orderBy: ['createdAt', 'desc']
       }
   ]}),
   connect((state) => {
