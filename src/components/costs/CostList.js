@@ -61,6 +61,8 @@ class CostList extends Component {
 
     return(
       <div className="container">
+        <h2>Wrikan</h2>
+        <div clsss="card-panel teal lighten-2"><a href="/LendingAndBorrowing" clsss="pink-text text-accent-4">Lending And Borrowing</a></div>
         <SaveCost />
         <div>
           <h3>{difference > 0 ? "貸し" : "借金"}{Math.abs(difference).toLocaleString()}円</h3>
