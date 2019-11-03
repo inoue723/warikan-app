@@ -25,6 +25,8 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
+if (!config) throw new Error("INVALID NODE_ENV");
+
 firebase.initializeApp(config);
 firebase.firestore();
 
