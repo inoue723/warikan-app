@@ -18,7 +18,8 @@ const store = createStore(rootReducer, {},
   )
 );
 
-// react-redux-firebase config
+// configs of react-redux-firebase
+// To use userProfile with firestore.
 const rrfConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true
@@ -40,6 +41,7 @@ let render = () => {
   )
 };
 
+// To use hot reload
 if (module.hot) {
   module.hot.accept('./App', () => {
     setTimeout(render);
