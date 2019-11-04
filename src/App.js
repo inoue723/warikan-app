@@ -5,6 +5,8 @@ import SignIn from "./components/auth/SignIn"
 import SignUp from "./components/auth/SignUp"
 import CostList from './components/costs/CostList'
 import FlashMessage from "./components/layout/FlashMessage"
+import Footer from "./components/layout/Footer"
+import SaveCost from "./components/costs/SaveCost"
 
 class App extends React.Component {
   render() {
@@ -18,7 +20,9 @@ class App extends React.Component {
             <Route exact path='/' component={CostList} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signup' component={SignUp} />
+            <Route path='/new' component={SaveCost} />
           </Switch>
+          <Footer />
         </div>
       </Router>
     );
