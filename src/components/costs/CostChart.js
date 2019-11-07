@@ -1,25 +1,27 @@
 import React, { Component } from "react"
 
-const { Chart } = window;
+const { Chart, ChartDataLabels } = window;
+Chart.plugins.unregister(ChartDataLabels);
 
 class CostChart extends Component {
   componentDidMount() {
     const ctx = document.getElementById("costChart");
     const costChart = new Chart(ctx, {
+      plugins: [ChartDataLabels],
       type: 'horizontalBar',
       data: {
-          labels: ["28,000円"],
+          labels: [],
           datasets: [
             {
               label: "あなたの支払い",
-              data: [15000],
+              data: [150000],
               backgroundColor: "rgba(255, 99, 132, 0.2)",
               borderColor: "rgba(255,99,132,1)",
               borderWidth: 1
            },
            {
              label: "相手の支払い",
-             data: [13000],
+             data: [130000],
              backgroundColor: "rgba(54, 162, 235, 0.2)",
              borderColor: "rgba(54, 162, 235, 1)",
              borderWidth: 1
@@ -33,11 +35,7 @@ class CostChart extends Component {
           }],
           xAxes: [{
             stacked: true,
-            scaleLabel: {             // 軸ラベル
-              display: true, // 表示設定
-              labelString: "円",  // ラベル
-              fontSize: 10          // フォントサイズ
-            }
+            display: false
           }]
         }
       }
