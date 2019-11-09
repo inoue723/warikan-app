@@ -35,7 +35,7 @@ class SaveCost extends Component {
 
 
     return (
-      <div>
+      <div className="container">
         { cost && cost.isTrying && <div className="progress"><div className="indeterminate"></div></div> }
         { error && <div className="card-panel lime lighten-2"><span className="white-text">{ error }</span></div> }
         <div>

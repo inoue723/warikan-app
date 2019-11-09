@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-import SaveCost from './SaveCost';
 import { connect } from 'react-redux'
 import { firestoreConnect, isLoaded } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from "react-router-dom"
 import moment from "moment"
+import CostChart from "./CostChart"
 
 class CostList extends Component {
-  getCostData(myCosts, partnerCosts) {
-    let myTotalCost = 0;
-    if (myCosts.length > 0) {
-      myTotalCost = myCosts.reduce((acc, current) => acc + current.amount, 0);
-    }
-
-    let partnerTotalCost = 0;
-    if (partnerCosts.length > 0) {
-      partnerTotalCost = partnerCosts.reduce((acc, current) => acc + current.amount, 0);
-    }
-
-    const totalCost = myTotalCost + partnerTotalCost;
-    const difference =  Math.trunc(myTotalCost - (totalCost / 2));
-    return { totalCost, myTotalCost, partnerTotalCost, difference };
-  }
-
   concatCosts(myCosts, partnerCosts) {
     const costs = myCosts.concat(partnerCosts);
     costs.sort((a, b) => b.paymentDate.toDate() - a.paymentDate.toDate());
@@ -58,20 +42,14 @@ class CostList extends Component {
       )
     }
 
-    const { difference } = this.getCostData(myCosts, partnerCosts);
-    const differenceColorClass = difference > 0 ? "green lighten-3" : "deep-orange lighten-2";
     const costs = this.concatCosts(myCosts, partnerCosts);
 
     return(
       <div className="container">
-        <SaveCost />
-        <div className="row">
-          <div className={`col s6 card-panel center-align ${differenceColorClass}`}>
-            <h4 className="grey-text text-darken-3">
-              パートナーとの差額　{difference > 0 ? "+" : ""}{difference.toLocaleString()}円
-            </h4>
-          </div>
-        </div>
+        <CostChart
+          myCosts={myCosts}
+          partnerCosts={partnerCosts}
+        />
         <table align="center">
           <tbody>
             <tr>
