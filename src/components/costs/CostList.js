@@ -7,7 +7,6 @@ import moment from "moment"
 import CostChart from "./CostChart"
 
 class CostList extends Component {
-
   concatCosts(myCosts, partnerCosts) {
     const costs = myCosts.concat(partnerCosts);
     costs.sort((a, b) => b.paymentDate.toDate() - a.paymentDate.toDate());

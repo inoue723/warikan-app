@@ -1,9 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from "react-redux"
 
-const Footer = (props) => {
-  // const { auth } = props;
+const Footer = () => {
   return(
     <footer className="red lighten-2">
       <div className="container">
@@ -32,11 +30,4 @@ const Footer = (props) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    auth: state.firebase.auth,
-  }
-}
-
-export default connect(mapStateToProps)(Footer)
-
+export default Footer
