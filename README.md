@@ -9,3 +9,6 @@ cd warikan-app
 npm install
 
 npm start
+
+squash test
+squash test
