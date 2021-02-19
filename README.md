@@ -12,3 +12,4 @@ npm start
 
 squash test
 squash test
+squash test
